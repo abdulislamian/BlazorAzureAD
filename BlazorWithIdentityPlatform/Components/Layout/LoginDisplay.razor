@@ -1,0 +1,36 @@
+<AuthorizeView>
+    <Authorized>
+        <p>User name: @user?.Identity?.Name</p>
+        <button class="btn btn-danger" @onclick="SignOut">Sign out</button>
+    </Authorized>
+    <NotAuthorized>
+        <button class="btn btn-info text-white" @onclick="SignIn">Sign in</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    private ClaimsPrincipal? user;
+
+    [CascadingParameter]
+    public required Task<AuthenticationState> AuthenticationState { get; set; }
+
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+
+    private async Task SignOut()
+    {
+        NavigationManager.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
+    }
+
+    private void SignIn()
+    {
+        NavigationManager.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationState;
+        user = authenticationState.User;
+    }
+}

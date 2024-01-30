@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "identityapp1": {
+      "connectionInfo": "App registration: SSRAzureAD, Tenant: Default Directory (abdulislamian7gmail.onmicrosoft.com - Microsoft Entra ID)",
+      "secretStore": "LocalSecretsFile",
+      "type": "identityapp.secretStore",
+      "connectionId": "AzureAD:ClientSecret"
+    },
+    "secrets1": {
+      "type": "secrets.user"
+    }
+  }
+}
