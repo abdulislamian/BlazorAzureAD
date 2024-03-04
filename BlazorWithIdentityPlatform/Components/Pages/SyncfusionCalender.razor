@@ -60,6 +60,7 @@
     SfSchedule<AppointmentData> scheduler;
 
     string Status = "";
+    //On Month Change
     public async Task OnActionCompleted(ActionEventArgs<AppointmentData> args)
     {
         var action = args.ActionType;
