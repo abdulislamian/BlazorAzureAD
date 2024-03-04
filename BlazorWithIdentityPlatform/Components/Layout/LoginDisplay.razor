@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
 <AuthorizeView>
     <Authorized>
         <p>User name: @user?.Identity?.Name</p>
@@ -20,6 +23,8 @@
 
     private async Task SignOut()
     {
+        // var scheme = OpenIdConnectDefaults.AuthenticationScheme;
+        // return (new AuthenticationProperties(),CookieAuthenticationDefaults.AuthenticationScheme,scheme);
         NavigationManager.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
     }
 

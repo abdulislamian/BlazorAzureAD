@@ -1,0 +1,50 @@
+﻿@page "/addevent"
+@using Newtonsoft.Json
+@using System.Text
+@inject IHttpClientFactory HttpClientFactory
+@inject ITokenAcquisition TokenAcquisitionService
+
+<div>
+    <SfButton @onclick="OnCreateClick">Add an Event</SfButton>
+</div>
+
+<div class="schedule-wrapper">
+   @EndResult
+</div>
+
+@code
+{
+    private HttpClient httpClient;
+    string EndResult = string.Empty;
+
+    private async void OnCreateClick(MouseEventArgs args)
+    {
+        httpClient = HttpClientFactory.CreateClient();
+        var token = await TokenAcquisitionService.GetAccessTokenForUserAsync(new string[] { "Calendars.ReadWrite" });
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        /////////////////// Add a New Event ///////////////
+        // Uri addEventUri = new Uri("https://graph.microsoft.com/beta/me/calendar/events");
+        Uri addEventUri = new Uri("https://graph.microsoft.com/v1.0/me/events");
+        Event newEvent = new Event()
+        {
+            Subject = "Sample Data 1",
+            Start = new DateTimeTimeZone() { DateTime = new DateTime(2020, 8, 20, 3, 0, 0).ToString("o"), TimeZone= "Eastern Standard Time" },
+            End = new DateTimeTimeZone() { DateTime = new DateTime(2020, 8, 20, 5, 0, 0).ToString("o"), TimeZone = "Eastern Standard Time" },
+            Body = new ItemBody() { ContentType = BodyType.Text, Content = "Sample Body Content" }
+        };
+        HttpContent addEventContent = new StringContent(JsonConvert.SerializeObject(newEvent), Encoding.UTF8, "application/json");
+        HttpResponseMessage addEventResponse = await httpClient.PostAsync(addEventUri, addEventContent);
+        if (addEventResponse.IsSuccessStatusCode)
+        {
+            EndResult = "Event has been added successfully!";
+            Console.WriteLine("Event has been added successfully!");
+        }
+        else
+        {
+            EndResult = addEventResponse.StatusCode.ToString();
+            Console.WriteLine(addEventResponse.StatusCode);
+        }
+    }
+
+}
